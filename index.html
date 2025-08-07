@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI สร้างเว็บ by ครูพี่</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Kanit', sans-serif; }
+        .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .card-hover { transition: all 0.3s ease; }
+        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+        .code-block { background: #1e1e1e; color: #d4d4d4; }
+        .copy-btn { transition: all 0.2s ease; }
+        .copy-btn:hover { background: #10b981; }
+        .tab-active { background: #667eea; color: white; }
+        .tab-inactive { background: #f3f4f6; color: #6b7280; }
+        .feature-icon { background: linear-gradient(135deg, #667eea, #764ba2); }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Language Selection Modal -->
+    <div id="languageModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-2xl p-8 max-w-2xl w-full mx-4 shadow-2xl">
+            <div class="text-center mb-8">
+                <div class="w-20 h-20 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-globe text-white text-3xl"></i>
+                </div>
+                <h2 class="text-3xl font-bold text-gray-800 mb-2">เลือกภาษา / Choose Language</h2>
+                <p class="text-gray-600">กรุณาเลือกภาษาที่คุณต้องการใช้งาน</p>
+            </div>
+            
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                <button onclick="selectLanguage('th')" class="language-btn flex flex-col items-center p-4 rounded-xl border-2 border-gray-200 hover:border-blue-500 hover:bg-blue-50 transition-all">
+                    <div class="text-4xl mb-2">🇹🇭</div>
+                    <span class="font-medium">ไทย</span>
+                    <span class="text-sm text-gray-500">Thai</span>
+                </button>
+                
+                <button onclick="selectLanguage('en')" class="language-btn flex flex-col items-center p-4 rounded-xl border-2 border-gray-200 hover:border-blue-500 hover:bg-blue-50 transition-all">
+                    <div class="text-4xl mb-2">🇺🇸</div>
+                    <span class="font-medium">English</span>
+                    <span class="text-sm text-gray-500">US</span>
+                </button>
+                
+                <button onclick="selectLanguage('zh')" class="language-btn flex flex-col items-center p-4 rounded-xl border-2 border-gray-200 hover:border-blue-500 hover:bg-blue-50 transition-all">
+                    <div class="text-4xl mb-2">🇨🇳</div>
+                    <span class="font-medium">中文</span>
+                    <span class="text-sm text-gray-500">Chinese</span>
+                </button>
+                
+                <button onclick="selectLanguage('ja')" class="language-btn flex flex-col items-center p-4 rounded-xl border-2 border-gray-200 hover:border-blue-500 hover:bg-blue-50 transition-all">
+                    <div class="text-4xl mb-2">🇯🇵</div>
+                    <span class="font-medium">日本語</span>
+                    <span class="text-sm text-gray-500">Japanese</span>
+                </button>
+                
+                <button onclick="selectLanguage('ko')" class="language-btn flex flex-col items-center p-4 rounded-xl border-2 border-gray-200 hover:border-blue-500 hover:bg-blue-50 transition-all">
+                    <div class="text-4xl mb-2">🇰🇷</div>
+                    <span class="font-medium">한국어</span>
+                    <span class="text-sm text-gray-500">Korean</span>
+                </button>
+                
+                <button onclick="selectLanguage('es')" class="language-btn flex flex-col items-center p-4 rounded-xl border-2 border-gray-200 hover:border-blue-500 hover:bg-blue-50 transition-all">
+                    <div class="text-4xl mb-2">🇪🇸</div>
+                    <span class="font-medium">Español</span>
+                    <span class="text-sm text-gray-500">Spanish</span>
+                </button>
+                
+                <button onclick="selectLanguage('fr')" class="language-btn flex flex-col items-center p-4 rounded-xl border-2 border-gray-200 hover:border-blue-500 hover:bg-blue-50 transition-all">
+                    <div class="text-4xl mb-2">🇫🇷</div>
+                    <span class="font-medium">Français</span>
+                    <span class="text-sm text-gray-500">French</span>
+                </button>
+                
+                <button onclick="selectLanguage('de')" class="language-btn flex flex-col items-center p-4 rounded-xl border-2 border-gray-200 hover:border-blue-500 hover:bg-blue-50 transition-all">
+                    <div class="text-4xl mb-2">🇩🇪</div>
+                    <span class="font-medium">Deutsch</span>
+                    <span class="text-sm text-gray-500">German</span>
+                </button>
+                
+                <button onclick="selectLanguage('ru')" class="language-btn flex flex-col items-center p-4 rounded-xl border-2 border-gray-200 hover:border-blue-500 hover:bg-blue-50 transition-all">
+                    <div class="text-4xl mb-2">🇷🇺</div>
+                    <span class="font-medium">Русский</span>
+                    <span class="text-sm text-gray-500">Russian</span>
+                </button>
+            </div>
+            
+            <div class="mt-6 text-center">
+                <p class="text-sm text-gray-500">คุณสามารถเปลี่ยนภาษาได้ทุกเมื่อในการตั้งค่า</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="gradient-bg text-white py-8">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <!-- ครูพี่ Avatar -->
+                    <div class="w-16 h-16 bg-yellow-400 rounded-full flex items-center justify-center">
+                        <svg class="w-12 h-12 text-yellow-800" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9V7L15 5.5V6.5C15 7.6 14.1 8.5 13 8.5H11C9.9 8.5 9 7.6 9 6.5V5.5L3 7V9L9 10.5V22H11V16H13V22H15V10.5L21 9Z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="text-3xl font-bold">AI สร้างเว็บ by ครูพี่</h1>
+                        <p class="text-blue-100">เรียนรู้และพัฒนาโค้ดอย่างง่ายดาย</p>
+                    </div>
+                </div>
+                <div class="hidden md:flex space-x-4">
+                    <span class="bg-white/20 px-3 py-1 rounded-full text-sm">📌 HTML, CSS, JS</span>
+                    <span class="bg-white/20 px-3 py-1 rounded-full text-sm">🧠 AI ช่วยเหลือ</span>
+                    <span class="bg-white/20 px-3 py-1 rounded-full text-sm">✅ พร้อมใช้งาน</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <nav class="bg-white shadow-sm sticky top-0 z-10">
+        <div class="container mx-auto px-4">
+            <div class="flex overflow-x-auto">
+                <button onclick="showTab('basics')" id="tab-basics" class="tab-active px-6 py-4 whitespace-nowrap font-medium rounded-t-lg">
+                    <i class="fas fa-book mr-2"></i>เรียนรู้พื้นฐาน
+                </button>
+                <button onclick="showTab('examples')" id="tab-examples" class="tab-inactive px-6 py-4 whitespace-nowrap font-medium rounded-t-lg">
+                    <i class="fas fa-code mr-2"></i>ตัวอย่างโค้ด
+                </button>
+                <button onclick="showTab('generate')" id="tab-generate" class="tab-inactive px-6 py-4 whitespace-nowrap font-medium rounded-t-lg">
+                    <i class="fas fa-magic mr-2"></i>สร้างโค้ด
+                </button>
+                <button onclick="showTab('debug')" id="tab-debug" class="tab-inactive px-6 py-4 whitespace-nowrap font-medium rounded-t-lg">
+                    <i class="fas fa-bug mr-2"></i>แก้บั๊ก
+                </button>
+                <button onclick="showTab('convert')" id="tab-convert" class="tab-inactive px-6 py-4 whitespace-nowrap font-medium rounded-t-lg">
+                    <i class="fas fa-exchange-alt mr-2"></i>แปลงภาษา
+                </button>
+                <button onclick="showTab('prompts')" id="tab-prompts" class="tab-inactive px-6 py-4 whitespace-nowrap font-medium rounded-t-lg">
+                    <i class="fas fa-comments mr-2"></i>Prompt ChatGPT
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        <!-- เรียนรู้พื้นฐาน Tab -->
+        <div id="basics-content" class="tab-content">
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="card-hover bg-white rounded-xl p-6 shadow-lg">
+                    <div class="feature-icon w-12 h-12 rounded-lg flex items-center justify-center mb-4">
+                        <i class="fab fa-html5 text-white text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">HTML พื้นฐาน</h3>
+                    <p class="text-gray-600 mb-4">เรียนรู้โครงสร้างเว็บไซต์และแท็ก HTML สำคัญ</p>
+                    <div class="code-block p-4 rounded-lg text-sm mb-4">
+                        <code>&lt;!DOCTYPE html&gt;<br>&lt;html&gt;<br>&nbsp;&nbsp;&lt;head&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;title&gt;หน้าแรก&lt;/title&gt;<br>&nbsp;&nbsp;&lt;/head&gt;<br>&nbsp;&nbsp;&lt;body&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;h1&gt;สวัสดี!&lt;/h1&gt;<br>&nbsp;&nbsp;&lt;/body&gt;<br>&lt;/html&gt;</code>
+                    </div>
+                    <button onclick="copyCode(this)" class="copy-btn w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600">
+                        <i class="fas fa-copy mr-2"></i>คัดลอกโค้ด
+                    </button>
+                </div>
+
+                <div class="card-hover bg-white rounded-xl p-6 shadow-lg">
+                    <div class="feature-icon w-12 h-12 rounded-lg flex items-center justify-center mb-4">
+                        <i class="fab fa-css3-alt text-white text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">CSS พื้นฐาน</h3>
+                    <p class="text-gray-600 mb-4">จัดแต่งหน้าเว็บให้สวยงามด้วย CSS</p>
+                    <div class="code-block p-4 rounded-lg text-sm mb-4">
+                        <code>body {<br>&nbsp;&nbsp;font-family: 'Kanit', sans-serif;<br>&nbsp;&nbsp;background: #f0f0f0;<br>}<br><br>.container {<br>&nbsp;&nbsp;max-width: 1200px;<br>&nbsp;&nbsp;margin: 0 auto;<br>&nbsp;&nbsp;padding: 20px;<br>}</code>
+                    </div>
+                    <button onclick="copyCode(this)" class="copy-btn w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600">
+                        <i class="fas fa-copy mr-2"></i>คัดลอกโค้ด
+                    </button>
+                </div>
+
+                <div class="card-hover bg-white rounded-xl p-6 shadow-lg">
+                    <div class="feature-icon w-12 h-12 rounded-lg flex items-center justify-center mb-4">
+                        <i class="fab fa-js-square text-white text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">JavaScript พื้นฐาน</h3>
+                    <p class="text-gray-600 mb-4">เพิ่มความโต้ตอบให้กับเว็บไซต์</p>
+                    <div class="code-block p-4 rounded-lg text-sm mb-4">
+                        <code>function sayHello() {<br>&nbsp;&nbsp;alert('สวัสดีครับ!');<br>}<br><br>document.addEventListener('DOMContentLoaded', function() {<br>&nbsp;&nbsp;console.log('เว็บโหลดเสร็จแล้ว!');<br>});</code>
+                    </div>
+                    <button onclick="copyCode(this)" class="copy-btn w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600">
+                        <i class="fas fa-copy mr-2"></i>คัดลอกโค้ด
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ตัวอย่างโค้ด Tab -->
+        <div id="examples-content" class="tab-content hidden">
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="card-hover bg-white rounded-xl p-6 shadow-lg">
+                    <h3 class="text-xl font-semibold mb-3">🎨 ปุ่มสวยงาม</h3>
+                    <p class="text-gray-600 mb-4">ปุ่มที่มีเอฟเฟกต์ hover และ gradient</p>
+                    <div class="mb-4">
+                        <button class="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 py-3 rounded-lg hover:from-purple-600 hover:to-pink-600 transition-all">
+                            ปุ่มตัวอย่าง
+                        </button>
+                    </div>
+                    <div class="code-block p-4 rounded-lg text-sm mb-4">
+                        <code>.gradient-btn {<br>&nbsp;&nbsp;background: linear-gradient(45deg, #667eea, #764ba2);<br>&nbsp;&nbsp;color: white;<br>&nbsp;&nbsp;padding: 12px 24px;<br>&nbsp;&nbsp;border: none;<br>&nbsp;&nbsp;border-radius: 8px;<br>&nbsp;&nbsp;cursor: pointer;<br>&nbsp;&nbsp;transition: all 0.3s ease;<br>}<br><br>.gradient-btn:hover {<br>&nbsp;&nbsp;transform: translateY(-2px);<br>&nbsp;&nbsp;box-shadow: 0 10px 20px rgba(0,0,0,0.2);<br>}</code>
+                    </div>
+                    <button onclick="copyCode(this)" class="copy-btn w-full bg-green-500 text-white py-2 rounded-lg hover:bg-green-600">
+                        <i class="fas fa-copy mr-2"></i>คัดลอกโค้ด
+                    </button>
+                </div>
+
+                <div class="card-hover bg-white rounded-xl p-6 shadow-lg">
+                    <h3 class="text-xl font-semibold mb-3">📱 Card Component</h3>
+                    <p class="text-gray-600 mb-4">การ์ดที่ใช้แสดงข้อมูลแบบสวยงาม</p>
+                    <div class="mb-4">
+                        <div class="bg-white border rounded-lg p-4 shadow-sm max-w-xs">
+                            <div class="w-full h-32 bg-gradient-to-r from-blue-400 to-purple-500 rounded mb-3"></div>
+                            <h4 class="font-semibold">หัวข้อการ์ด</h4>
+                            <p class="text-gray-600 text-sm">รายละเอียดของการ์ด</p>
+                        </div>
+                    </div>
+                    <div class="code-block p-4 rounded-lg text-sm mb-4">
+                        <code>&lt;div class="card"&gt;<br>&nbsp;&nbsp;&lt;div class="card-image"&gt;&lt;/div&gt;<br>&nbsp;&nbsp;&lt;div class="card-content"&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;h3&gt;หัวข้อการ์ด&lt;/h3&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;p&gt;รายละเอียด&lt;/p&gt;<br>&nbsp;&nbsp;&lt;/div&gt;<br>&lt;/div&gt;</code>
+                    </div>
+                    <button onclick="copyCode(this)" class="copy-btn w-full bg-green-500 text-white py-2 rounded-lg hover:bg-green-600">
+                        <i class="fas fa-copy mr-2"></i>คัดลอกโค้ด
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- สร้างโค้ด Tab -->
+        <div id="generate-content" class="tab-content hidden">
+            <div class="bg-white rounded-xl p-6 shadow-lg">
+                <h3 class="text-2xl font-semibold mb-6">🤖 AI สร้างโค้ดให้คุณ</h3>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-medium mb-2">อธิบายสิ่งที่ต้องการ:</label>
+                        <textarea id="codeRequest" class="w-full h-32 p-4 border rounded-lg resize-none" placeholder="เช่น: สร้างปุ่มสีแดงที่มีเอฟเฟกต์เมื่อ hover"></textarea>
+                        <div class="mt-4">
+                            <label class="block text-sm font-medium mb-2">เลือกภาษา:</label>
+                            <select id="codeLanguage" class="w-full p-3 border rounded-lg">
+                                <option value="html">HTML</option>
+                                <option value="css">CSS</option>
+                                <option value="javascript">JavaScript</option>
+                            </select>
+                        </div>
+                        <button onclick="generateCode()" class="w-full mt-4 bg-purple-500 text-white py-3 rounded-lg hover:bg-purple-600">
+                            <i class="fas fa-magic mr-2"></i>สร้างโค้ด
+                        </button>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">โค้ดที่สร้างขึ้น:</label>
+                        <div id="generatedCode" class="code-block p-4 rounded-lg h-48 overflow-auto">
+                            <code>กรุณาใส่คำอธิบายแล้วกดปุ่ม "สร้างโค้ด"</code>
+                        </div>
+                        <button onclick="copyGeneratedCode()" class="copy-btn w-full mt-4 bg-green-500 text-white py-2 rounded-lg hover:bg-green-600">
+                            <i class="fas fa-copy mr-2"></i>คัดลอกโค้ด
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- แก้บั๊ก Tab -->
+        <div id="debug-content" class="tab-content hidden">
+            <div class="bg-white rounded-xl p-6 shadow-lg">
+                <h3 class="text-2xl font-semibold mb-6">🔧 AI แก้บั๊กอัตโนมัติ</h3>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-medium mb-2">ใส่โค้ดที่มีปัญหา:</label>
+                        <textarea id="buggyCode" class="w-full h-48 p-4 border rounded-lg resize-none font-mono text-sm" placeholder="วางโค้ดที่ต้องการตรวจสอบที่นี่..."></textarea>
+                        <button onclick="debugCode()" class="w-full mt-4 bg-red-500 text-white py-3 rounded-lg hover:bg-red-600">
+                            <i class="fas fa-search mr-2"></i>วิเคราะห์และแก้ไข
+                        </button>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">การวิเคราะห์และคำแนะนำ:</label>
+                        <div id="debugResult" class="bg-gray-50 p-4 rounded-lg h-48 overflow-auto">
+                            <p class="text-gray-500">กรุณาใส่โค้ดแล้วกดปุ่ม "วิเคราะห์และแก้ไข"</p>
+                        </div>
+                        <button onclick="copyDebugResult()" class="copy-btn w-full mt-4 bg-green-500 text-white py-2 rounded-lg hover:bg-green-600">
+                            <i class="fas fa-copy mr-2"></i>คัดลอกโค้ดที่แก้แล้ว
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- แปลงภาษา Tab -->
+        <div id="convert-content" class="tab-content hidden">
+            <div class="bg-white rounded-xl p-6 shadow-lg">
+                <h3 class="text-2xl font-semibold mb-6">🔄 แปลงภาษาโปรแกรม</h3>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <div class="flex space-x-4 mb-4">
+                            <select id="fromLanguage" class="flex-1 p-3 border rounded-lg">
+                                <option value="html">HTML</option>
+                                <option value="css">CSS</option>
+                                <option value="javascript">JavaScript</option>
+                            </select>
+                            <div class="flex items-center">
+                                <i class="fas fa-arrow-right text-gray-400"></i>
+                            </div>
+                            <select id="toLanguage" class="flex-1 p-3 border rounded-lg">
+                                <option value="css">CSS</option>
+                                <option value="html">HTML</option>
+                                <option value="javascript">JavaScript</option>
+                            </select>
+                        </div>
+                        <textarea id="sourceCode" class="w-full h-48 p-4 border rounded-lg resize-none font-mono text-sm" placeholder="ใส่โค้ดต้นฉบับที่นี่..."></textarea>
+                        <button onclick="convertCode()" class="w-full mt-4 bg-indigo-500 text-white py-3 rounded-lg hover:bg-indigo-600">
+                            <i class="fas fa-exchange-alt mr-2"></i>แปลงโค้ด
+                        </button>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">โค้ดที่แปลงแล้ว:</label>
+                        <div id="convertedCode" class="code-block p-4 rounded-lg h-48 overflow-auto">
+                            <code>กรุณาเลือกภาษาและใส่โค้ดแล้วกดปุ่ม "แปลงโค้ด"</code>
+                        </div>
+                        <button onclick="copyConvertedCode()" class="copy-btn w-full mt-4 bg-green-500 text-white py-2 rounded-lg hover:bg-green-600">
+                            <i class="fas fa-copy mr-2"></i>คัดลอกโค้ด
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Prompt ChatGPT Tab -->
+        <div id="prompts-content" class="tab-content hidden">
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="card-hover bg-white rounded-xl p-6 shadow-lg">
+                    <h3 class="text-lg font-semibold mb-3">💻 สร้างเว็บไซต์</h3>
+                    <p class="text-gray-600 text-sm mb-4">Prompt สำหรับสร้างเว็บไซต์ทั้งหน้า</p>
+                    <div class="bg-gray-50 p-3 rounded text-sm mb-4">
+                        "สร้างเว็บไซต์ [ประเภท] ที่มี [ฟีเจอร์] โดยใช้ HTML, CSS, JavaScript แบบ responsive และสวยงาม"
+                    </div>
+                    <button onclick="copyPrompt(this)" class="copy-btn w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600">
+                        <i class="fas fa-copy mr-2"></i>คัดลอก Prompt
+                    </button>
+                </div>
+
+                <div class="card-hover bg-white rounded-xl p-6 shadow-lg">
+                    <h3 class="text-lg font-semibold mb-3">🎨 ออกแบบ UI</h3>
+                    <p class="text-gray-600 text-sm mb-4">Prompt สำหรับออกแบบส่วนประกอบ UI</p>
+                    <div class="bg-gray-50 p-3 rounded text-sm mb-4">
+                        "ออกแบบ [component] ที่มีสไตล์ [modern/minimal/colorful] พร้อม hover effects และ animations ด้วย CSS"
+                    </div>
+                    <button onclick="copyPrompt(this)" class="copy-btn w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600">
+                        <i class="fas fa-copy mr-2"></i>คัดลอก Prompt
+                    </button>
+                </div>
+
+                <div class="card-hover bg-white rounded-xl p-6 shadow-lg">
+                    <h3 class="text-lg font-semibold mb-3">🔧 แก้ไขโค้ด</h3>
+                    <p class="text-gray-600 text-sm mb-4">Prompt สำหรับแก้ไขและปรับปรุงโค้ด</p>
+                    <div class="bg-gray-50 p-3 rounded text-sm mb-4">
+                        "วิเคราะห์โค้ดนี้และแก้ไขปัญหา พร้อมอธิบายสาเหตุและวิธีแก้ไข: [โค้ด]"
+                    </div>
+                    <button onclick="copyPrompt(this)" class="copy-btn w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600">
+                        <i class="fas fa-copy mr-2"></i>คัดลอก Prompt
+                    </button>
+                </div>
+
+                <div class="card-hover bg-white rounded-xl p-6 shadow-lg">
+                    <h3 class="text-lg font-semibold mb-3">📱 Responsive Design</h3>
+                    <p class="text-gray-600 text-sm mb-4">Prompt สำหรับทำ responsive</p>
+                    <div class="bg-gray-50 p-3 rounded text-sm mb-4">
+                        "ปรับโค้ดนี้ให้เป็น responsive design ที่ใช้งานได้ดีบนมือถือ แท็บเล็ต และเดสก์ท็อป"
+                    </div>
+                    <button onclick="copyPrompt(this)" class="copy-btn w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600">
+                        <i class="fas fa-copy mr-2"></i>คัดลอก Prompt
+                    </button>
+                </div>
+
+                <div class="card-hover bg-white rounded-xl p-6 shadow-lg">
+                    <h3 class="text-lg font-semibold mb-3">⚡ เพิ่มฟีเจอร์</h3>
+                    <p class="text-gray-600 text-sm mb-4">Prompt สำหรับเพิ่มความสามารถ</p>
+                    <div class="bg-gray-50 p-3 rounded text-sm mb-4">
+                        "เพิ่มฟีเจอร์ [ฟีเจอร์ที่ต้องการ] ให้กับโค้ดนี้ พร้อมทำให้ใช้งานง่ายและมี UX ที่ดี"
+                    </div>
+                    <button onclick="copyPrompt(this)" class="copy-btn w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600">
+                        <i class="fas fa-copy mr-2"></i>คัดลอก Prompt
+                    </button>
+                </div>
+
+                <div class="card-hover bg-white rounded-xl p-6 shadow-lg">
+                    <h3 class="text-lg font-semibold mb-3">🎯 เฉพาะเจาะจง</h3>
+                    <p class="text-gray-600 text-sm mb-4">Prompt สำหรับงานเฉพาะ</p>
+                    <div class="bg-gray-50 p-3 rounded text-sm mb-4">
+                        "สร้าง [สิ่งที่ต้องการ] ที่มีฟังก์ชัน [รายละเอียด] และใช้เทคโนโลยี [HTML/CSS/JS] แบบ clean code"
+                    </div>
+                    <button onclick="copyPrompt(this)" class="copy-btn w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600">
+                        <i class="fas fa-copy mr-2"></i>คัดลอก Prompt
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="gradient-bg text-white py-8 mt-12">
+        <div class="container mx-auto px-4 text-center">
+            <div class="flex items-center justify-center space-x-4 mb-4">
+                <div class="w-12 h-12 bg-yellow-400 rounded-full flex items-center justify-center">
+                    <svg class="w-8 h-8 text-yellow-800" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9V7L15 5.5V6.5C15 7.6 14.1 8.5 13 8.5H11C9.9 8.5 9 7.6 9 6.5V5.5L3 7V9L9 10.5V22H11V16H13V22H15V10.5L21 9Z"/>
+                    </svg>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold">ครูพี่</h3>
+                    <p class="text-blue-100">ผู้สอนเทคโนโลยี</p>
+                </div>
+            </div>
+            <p class="text-blue-100">© 2024 AI สร้างเว็บ by ครูพี่ - ช่วยให้การเรียนรู้โค้ดเป็นเรื่องง่าย</p>
+        </div>
+    </footer>
+
+    <script>
+        // Tab Management
+        function showTab(tabName) {
+            // Hide all tab contents
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => content.classList.add('hidden'));
+            
+            // Remove active class from all tabs
+            const tabs = document.querySelectorAll('[id^="tab-"]');
+            tabs.forEach(tab => {
+                tab.classList.remove('tab-active');
+                tab.classList.add('tab-inactive');
+            });
+            
+            // Show selected tab content
+            document.getElementById(tabName + '-content').classList.remove('hidden');
+            
+            // Add active class to selected tab
+            document.getElementById('tab-' + tabName).classList.remove('tab-inactive');
+            document.getElementById('tab-' + tabName).classList.add('tab-active');
+        }
+
+        // Copy Code Functions
+        function copyCode(button) {
+            const codeBlock = button.parentElement.querySelector('.code-block code');
+            const text = codeBlock.textContent;
+            
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = button.innerHTML;
+                button.innerHTML = '<i class="fas fa-check mr-2"></i>คัดลอกแล้ว!';
+                button.classList.add('bg-green-500');
+                
+                setTimeout(() => {
+                    button.innerHTML = originalText;
+                    button.classList.remove('bg-green-500');
+                }, 2000);
+            });
+        }
+
+        function copyPrompt(button) {
+            const promptText = button.parentElement.querySelector('.bg-gray-50').textContent;
+            
+            navigator.clipboard.writeText(promptText).then(() => {
+                const originalText = button.innerHTML;
+                button.innerHTML = '<i class="fas fa-check mr-2"></i>คัดลอกแล้ว!';
+                button.classList.add('bg-green-500');
+                
+                setTimeout(() => {
+                    button.innerHTML = originalText;
+                    button.classList.remove('bg-green-500');
+                }, 2000);
+            });
+        }
+
+        // AI Code Generation (Mock)
+        function generateCode() {
+            const request = document.getElementById('codeRequest').value;
+            const language = document.getElementById('codeLanguage').value;
+            const resultDiv = document.getElementById('generatedCode');
+            
+            if (!request.trim()) {
+                resultDiv.innerHTML = '<code style="color: #ff6b6b;">กรุณาใส่คำอธิบายสิ่งที่ต้องการ</code>';
+                return;
+            }
+            
+            // Mock AI response based on language
+            let mockCode = '';
+            if (language === 'html') {
+                mockCode = `&lt;div class="generated-element"&gt;<br>&nbsp;&nbsp;&lt;h2&gt;${request}&lt;/h2&gt;<br>&nbsp;&nbsp;&lt;p&gt;สร้างจากคำอธิบาย: ${request}&lt;/p&gt;<br>&lt;/div&gt;`;
+            } else if (language === 'css') {
+                mockCode = `.generated-element {<br>&nbsp;&nbsp;/* สร้างจาก: ${request} */<br>&nbsp;&nbsp;background: linear-gradient(45deg, #667eea, #764ba2);<br>&nbsp;&nbsp;padding: 20px;<br>&nbsp;&nbsp;border-radius: 10px;<br>&nbsp;&nbsp;color: white;<br>}`;
+            } else {
+                mockCode = `// สร้างจาก: ${request}<br>function generatedFunction() {<br>&nbsp;&nbsp;console.log('${request}');<br>&nbsp;&nbsp;// เพิ่มฟังก์ชันตามคำอธิบาย<br>&nbsp;&nbsp;return true;<br>}`;
+            }
+            
+            resultDiv.innerHTML = `<code>${mockCode}</code>`;
+        }
+
+        function copyGeneratedCode() {
+            const codeDiv = document.getElementById('generatedCode');
+            const text = codeDiv.textContent;
+            
+            if (text.includes('กรุณาใส่คำอธิบาย')) {
+                return;
+            }
+            
+            navigator.clipboard.writeText(text);
+        }
+
+        // Debug Code (Mock)
+        function debugCode() {
+            const code = document.getElementById('buggyCode').value;
+            const resultDiv = document.getElementById('debugResult');
+            
+            if (!code.trim()) {
+                resultDiv.innerHTML = '<p style="color: #ff6b6b;">กรุณาใส่โค้ดที่ต้องการตรวจสอบ</p>';
+                return;
+            }
+            
+            // Mock analysis
+            const issues = [
+                '✅ ไม่พบ syntax error',
+                '⚠️ แนะนำเพิ่ม semicolon ที่บรรทัดที่ 5',
+                '💡 ควรใช้ const แทน var สำหรับตัวแปรที่ไม่เปลี่ยนแปลง',
+                '🎨 แนะนำเพิ่ม CSS reset สำหรับ cross-browser compatibility'
+            ];
+            
+            resultDiv.innerHTML = `
+                <div class="space-y-2">
+                    <h4 class="font-semibold text-green-600">การวิเคราะห์โค้ด:</h4>
+                    ${issues.map(issue => `<p class="text-sm">${issue}</p>`).join('')}
+                    <div class="mt-4 p-3 bg-green-50 rounded">
+                        <h5 class="font-semibold text-green-700">โค้ดที่แก้ไขแล้ว:</h5>
+                        <code class="text-sm">${code.replace(/var /g, 'const ')}</code>
+                    </div>
+                </div>
+            `;
+        }
+
+        function copyDebugResult() {
+            const resultDiv = document.getElementById('debugResult');
+            const codeElement = resultDiv.querySelector('code');
+            
+            if (codeElement) {
+                navigator.clipboard.writeText(codeElement.textContent);
+            }
+        }
+
+        // Convert Code (Mock)
+        function convertCode() {
+            const sourceCode = document.getElementById('sourceCode').value;
+            const fromLang = document.getElementById('fromLanguage').value;
+            const toLang = document.getElementById('toLanguage').value;
+            const resultDiv = document.getElementById('convertedCode');
+            
+            if (!sourceCode.trim()) {
+                resultDiv.innerHTML = '<code style="color: #ff6b6b;">กรุณาใส่โค้ดต้นฉบับ</code>';
+                return;
+            }
+            
+            // Mock conversion
+            let convertedCode = '';
+            if (fromLang === 'html' && toLang === 'css') {
+                convertedCode = `/* แปลงจาก HTML */<br>.converted-element {<br>&nbsp;&nbsp;display: block;<br>&nbsp;&nbsp;margin: 10px;<br>&nbsp;&nbsp;padding: 15px;<br>}`;
+            } else if (fromLang === 'css' && toLang === 'javascript') {
+                convertedCode = `// แปลงจาก CSS<br>const element = document.querySelector('.element');<br>element.style.cssText = \`<br>&nbsp;&nbsp;${sourceCode.replace(/\n/g, '<br>&nbsp;&nbsp;')}<br>\`;`;
+            } else {
+                convertedCode = `// แปลงจาก ${fromLang} เป็น ${toLang}<br>/* โค้ดที่แปลงแล้ว */<br>${sourceCode}`;
+            }
+            
+            resultDiv.innerHTML = `<code>${convertedCode}</code>`;
+        }
+
+        function copyConvertedCode() {
+            const codeDiv = document.getElementById('convertedCode');
+            const text = codeDiv.textContent;
+            
+            if (text.includes('กรุณาเลือกภาษา')) {
+                return;
+            }
+            
+            navigator.clipboard.writeText(text);
+        }
+
+        // Language Selection
+        function selectLanguage(langCode) {
+            // Store selected language
+            localStorage.setItem('selectedLanguage', langCode);
+            
+            // Hide language modal with animation
+            const modal = document.getElementById('languageModal');
+            modal.style.opacity = '0';
+            modal.style.transform = 'scale(0.9)';
+            
+            setTimeout(() => {
+                modal.style.display = 'none';
+            }, 300);
+            
+            // Update content based on language (mock implementation)
+            updateContentLanguage(langCode);
+        }
+        
+        function updateContentLanguage(langCode) {
+            // This is a mock implementation - in real app, you'd load language files
+            const translations = {
+                'en': {
+                    title: 'AI Web Builder by Teacher P',
+                    subtitle: 'Learn and develop code easily'
+                },
+                'zh': {
+                    title: 'AI网页构建器 by 老师P',
+                    subtitle: '轻松学习和开发代码'
+                },
+                'ja': {
+                    title: 'AI ウェブビルダー by 先生P',
+                    subtitle: 'コードを簡単に学習・開発'
+                }
+            };
+            
+            if (translations[langCode]) {
+                // Update main title and subtitle
+                document.querySelector('h1').textContent = translations[langCode].title;
+                document.querySelector('header p').textContent = translations[langCode].subtitle;
+            }
+        }
+        
+        // Check if language was previously selected
+        function checkLanguageSelection() {
+            const savedLanguage = localStorage.getItem('selectedLanguage');
+            if (savedLanguage) {
+                document.getElementById('languageModal').style.display = 'none';
+                updateContentLanguage(savedLanguage);
+            } else {
+                // Show language modal with animation
+                const modal = document.getElementById('languageModal');
+                modal.style.opacity = '0';
+                modal.style.transform = 'scale(0.9)';
+                modal.style.transition = 'all 0.3s ease';
+                
+                setTimeout(() => {
+                    modal.style.opacity = '1';
+                    modal.style.transform = 'scale(1)';
+                }, 100);
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            checkLanguageSelection();
+            showTab('basics');
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96b73436044345cf',t:'MTc1NDU3NDIxNy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
